@@ -48,15 +48,24 @@ if [[ "$TELEMETRY" == "true" && ( "$MODE" == "frontend" || "$MODE" == "standalon
   fi
 
   mkdir -p /database/
-  chown www-data /database/
+  chown $UID:$GID /database/
 fi
 
-chown -R www-data /var/www/html/*
+chown -R $UID:$GID /var/www/html/*
 
 # Allow selection of Apache port for network_mode: host
 if [ "$WEBPORT" != "80" ]; then
   sed -i "s/^Listen 80\$/Listen $WEBPORT/g" /etc/apache2/ports.conf
   sed -i "s/*:80>/*:$WEBPORT>/g" /etc/apache2/sites-available/000-default.conf 
+fi
+
+# Run as the different user and group
+if [ "$UID" != "www-data" ]; then
+  sed -i "s/^User www-data\$/User $UID/g" /etc/apache2/sites-available/000-default.conf
+fi
+
+if [ "$GID" != "www-data" ]; then
+  sed -i "s/^Group www-data\$/Group $GID/g" /etc/apache2/sites-available/000-default.conf
 fi
 
 echo "Done, Starting APACHE"

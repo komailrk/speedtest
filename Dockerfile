@@ -35,6 +35,8 @@ ENV TELEMETRY=false
 ENV ENABLE_ID_OBFUSCATION=false
 ENV REDACT_IP_ADDRESSES=false
 ENV WEBPORT=80
+ENV UID=www-data
+ENV GID=www-data
 
 # Final touches
 
